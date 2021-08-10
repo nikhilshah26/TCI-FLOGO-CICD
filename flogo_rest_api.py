@@ -1,17 +1,13 @@
 #!/usr/bin/env python
 # Author : Nikhil Shah
 # Date : 06/08/21
-# Workflow 
-""" We have 3 orgs we use for CI/CD in the Cooper Airlines org: Dev/QA, Staging, Production
+# This python script executes below workflow
+""" We have 2 orgs we use for CI/CD in the Cooper Airlines org: Dev/QA, Staging & Pre-Production
 1. The app on Dev/QA already exists and the purpose of the Jenkins pipeline is:
 2. To copy a specific app from Dev/QA org to Staging  org
 3. Deploy the new copied app in Staging org
 4. Retrieve the endpoints of the deployed app in Staging org
-5. Invoke the endpoint to "test" it
-6. Copy the app in Staging org to Production org
-7. Deploy it
-8. Retrieve the endpoints again
-9. Test the endpoint """
+5. Invoke the endpoint to "test" it """
 
 # How to run this code -
 # python3 flogo_rest_api.py <base_url> <access_token> <sourceAppId> <subscriptionLocator> <targetSubscriptionLocator> <newAppName>
@@ -60,6 +56,7 @@ def get_UserInfo():
 
 #Copy App
 def copy_App(sourceAppId,NewAppName,subscriptionLocator,targetSubscriptionLocator):
+    print ("\n*****Copying App from Dev/QA org to Staging Org******")
     if targetSubscriptionLocator != '':
         response = requests.post(base_url+'/tci/v1/subscriptions/'+subscriptionLocator+'/apps/'+sourceAppId+'/copy?appName='+NewAppName+'&targetSubscriptionLocator='+targetSubscriptionLocator, headers=Auth_Header)
     else:
@@ -102,7 +99,8 @@ def get_Endpoints(targetSubscriptionLocator,app_id):
     req_url=resp_dict[0]['url']
       
     print('\n**** App Endpoints *****' , req_url+'/rest')  
-    time.sleep(15)
+    print('\n ***** Testing the App Endpoint *******')
+    time.sleep(20)
     print('\n ***Test Endpoint Response ***',requests.get(req_url+'/rest').json())
 
 def main():
