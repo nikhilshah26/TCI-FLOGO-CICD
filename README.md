@@ -1,2 +1,2 @@
 # TCI-FLOGO-CICD
-How to deploy flogo apps to TCI using CICD
+Python script to deploy flogo apps to TCI using CICD
