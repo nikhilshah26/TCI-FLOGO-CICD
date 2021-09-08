@@ -5,6 +5,13 @@
 
 This sample demonstrates a simple worflow about how to deploy applications to TCI, copy them from one org to another, run the app, and test the endpoints.
 
+""" We have 2 orgs we use for CI/CD in the Cooper Airlines org: Dev/QA, Staging & Pre-Production
+1. The app on Dev/QA already exists and the purpose of the Jenkins pipeline is:
+2. To copy a specific app from Dev/QA org to Staging  org
+3. Deploy the new copied app in Staging org
+4. Retrieve the endpoints of the deployed app in Staging org
+5. Invoke the endpoint to "test" it """
+
 ## Prerequisites
 
 * Generate OAuth2 access token for Integration Domain from TIBCO Cloud Settings page - https://account.cloud.tibco.com/manage/settings/oAuthTokens
