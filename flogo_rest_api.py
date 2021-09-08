@@ -50,8 +50,13 @@ Auth_Header={'Authorization' : 'Bearer '+access_token+'','Accept': 'application/
 
 #Get User Info
 def get_UserInfo():
-    response = requests.get(base_url+'/tci/v1/userinfo', headers=Auth_Header)
-    #print('\n**** User Info*****' , response.json())  
+    try:
+        response = requests.get(base_url+'/tci/v1/userinfo', headers=Auth_Header)
+        #print('\n**** User Info*****' , response.json())  
+        #print ("*******",response.status_code)
+    except:
+        print ("Please enter valid base url")
+        exit()
 
 
 #Copy App
@@ -61,6 +66,14 @@ def copy_App(sourceAppId,NewAppName,subscriptionLocator,targetSubscriptionLocato
         response = requests.post(base_url+'/tci/v1/subscriptions/'+subscriptionLocator+'/apps/'+sourceAppId+'/copy?appName='+NewAppName+'&targetSubscriptionLocator='+targetSubscriptionLocator, headers=Auth_Header)
     else:
         response = requests.post(base_url+'/tci/v1/subscriptions/0/apps/'+sourceAppId+'/copy?appName='+NewAppName, headers=Auth_Header)    
+    print (response.status_code)
+    if (response.status_code == 401):
+        print ("Invalid Secret access token. Please input valid Secret access token generated from https://account.cloud.tibco.com/manage/settings/oAuthTokens")
+        exit()
+    elif (response.status_code == 404 or response.status_code == 400):
+        print (response.text)
+        exit()
+
     print(response.json())
     resp_dict=json.loads(json.dumps(response.json()))
     appId=resp_dict['appId']
