@@ -18,5 +18,5 @@ This sample demonstrates a simple worflow about how to deploy applications to TC
 2. Create a freestyle project
 
 3. On the app details page, select Import app.
-![Select import](../../import-screenshots/1.Build_params.png)
+![Select import](import-screenshots/1.Build_params.png)
 
