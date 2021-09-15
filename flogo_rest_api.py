@@ -3,11 +3,13 @@
 # Date : 06/08/21
 # This python script executes below workflow
 """ We have 2 orgs we use for CI/CD in the Cooper Airlines org: Dev/QA, Staging & Pre-Production
-1. The app on Dev/QA already exists and the purpose of the Jenkins pipeline is:
-2. To copy a specific app from Dev/QA org to Staging  org
-3. Deploy the new copied app in Staging org
-4. Retrieve the endpoints of the deployed app in Staging org
-5. Invoke the endpoint to "test" it """
+1. The app is deployed on Dev/QA org using the flogo.json and manifest.json artifacts on github
+2. Start the app and Test the endpoints
+3. Copy this app from Dev/QA org to Staging  org
+4. Start the new copied app in Staging org
+5. Override the DB Host name app prop 
+6. Retrieve the endpoints of the deployed app in Staging org
+7. Invoke the endpoint to "test" it """
 
 # How to run this code -
 # python3 flogo_rest_api.py <base_url> <access_token> <sourceAppId> <subscriptionLocator> <targetSubscriptionLocator> <newAppName> <App_Artifacts_Github_Path> <Override_App_Prop_Json>
