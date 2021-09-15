@@ -16,6 +16,7 @@ import json
 import requests
 import time
 import argparse
+import os
 
 subscriptionLocator=0
 targetSubscriptionLocator=''
@@ -29,6 +30,7 @@ parser.add_argument('sourceAppId')
 parser.add_argument('subscriptionLocator')
 parser.add_argument('targetSubscriptionLocator')
 parser.add_argument('newAppName')
+parser.add_argument('App_Artifacts_Github_Path')
 args = parser.parse_args()
 
 print ('base_url :',args.base_url)
@@ -37,6 +39,7 @@ print ('sourceAppId :',args.sourceAppId)
 print ('subscriptionLocator :',args.subscriptionLocator)
 print ('targetSubscriptionLocator :',args.targetSubscriptionLocator)
 print ('newAppName :',args.newAppName)
+print ( 'App_Artifacts_Github_Path :',args.App_Artifacts_Github_Path)
 
 base_url=args.base_url
 access_token=args.access_token
@@ -44,6 +47,7 @@ sourceAppId=args.sourceAppId
 subscriptionLocator=args.subscriptionLocator
 targetSubscriptionLocator=args.targetSubscriptionLocator
 newAppName=args.newAppName
+App_Artifacts_Github_Path=args.App_Artifacts_Github_Path
 
 
 Auth_Header={'Authorization' : 'Bearer '+access_token+'','Accept': 'application/json','User-Agent':'PostmanRuntime/7.28.3'}
@@ -58,6 +62,45 @@ def get_UserInfo():
         print ("Please enter valid base url. For eg. https://api.cloud.tibco.com for TCI US region.")
         exit()
 
+def download_app_artifacts_from_Githib(flogo_json_url,manifest_json_url):
+    #flogo_json_url = "https://raw.githubusercontent.com/nikhilshah26/TCI-FLOGO-CICD/main/Flogo_App/flogo.json"
+    #manifest_json_url= "https://raw.githubusercontent.com/nikhilshah26/TCI-FLOGO-CICD/main/Flogo_App/manifest.json"
+
+    directory = os.getcwd()
+    flogojsonfilename = directory + "/" + 'flogo.json'
+    print ("flogojsonfilename="+flogojsonfilename)
+    flogo_json = requests.get(flogo_json_url)
+
+    f = open(flogojsonfilename,'w')
+    f.write(flogo_json.text)
+    f.close()
+
+    #print ("****FLOGO json****",flogo_json.text)
+
+    manifestjsonfilename = directory + "/" + 'manifest.json'
+    manifest_json = requests.get(manifest_json_url)
+
+    f1 = open(manifestjsonfilename,'w')
+    f1.write(manifest_json.text)
+    f1.close()
+
+    #print ("****Manifest json****",manifest_json.text)
+
+def pushapp_using_app_artifacts(subsLocator,appName,forceOverwrite,instanceCount,retainAppProps):
+    files = [
+            ('artifact', ('flogo.json', open('flogo.json', 'rb'), 'application/json')),
+            ('manifest.json', ('manifest.json', open('manifest.json', 'rb'), 'application/json'))
+        ]
+
+    print("**** Deploying app with the artifacts provided******")
+    response = requests.post(base_url+'/tci/v1/subscriptions/'+subsLocator+'/apps?appName='+appName+'&forceOverwrite='+forceOverwrite+'&instanceCount='+instanceCount+'&retainAppProps='+retainAppProps+'', headers=Auth_Header,files=files)
+    time.sleep(25)
+    print ("*****Status Code****"+str(response.status_code))
+    print(response.json())
+    resp_dict=json.loads(json.dumps(response.json()))
+    appId=resp_dict['appId']
+    print('\n***** App ID of deployed app ****' , appId)
+    return appId
 
 #Copy App
 def copy_App(sourceAppId,NewAppName,subscriptionLocator,targetSubscriptionLocator):
@@ -111,17 +154,19 @@ def get_Endpoints(targetSubscriptionLocator,app_id):
     resp_dict=json.loads(json.dumps(response.json()))
     req_url=resp_dict[0]['url']
       
-    print('\n**** App Endpoints *****' , req_url+'/rest')  
+    print('\n**** App Endpoints *****' , req_url+'/postgresql')  
     print('\n ***** Testing the App Endpoint *******')
     time.sleep(20)
-    print('\n ***Test Endpoint Response ***',requests.get(req_url+'/rest').json())
+    print('\n ***Test Endpoint Response ***',requests.get(req_url+'/postgresql').json())
 
 def main():
     get_UserInfo()
-    app_id=copy_App(sourceAppId,newAppName,subscriptionLocator,targetSubscriptionLocator)
-    get_App_Details(app_id,targetSubscriptionLocator)
-    start_App(targetSubscriptionLocator,app_id)
-    get_Endpoints(targetSubscriptionLocator,app_id)
+    #app_id=copy_App(sourceAppId,newAppName,subscriptionLocator,targetSubscriptionLocator)
+    download_app_artifacts_from_Githib(App_Artifacts_Github_Path+'/flogo.json',App_Artifacts_Github_Path+'/manifest.json')
+    app_id=pushapp_using_app_artifacts(subscriptionLocator,newAppName,"true","1","true")
+    get_App_Details(app_id,subscriptionLocator)
+    #start_App(subscriptionLocator,app_id)
+    get_Endpoints(subscriptionLocator,app_id)
 
 if __name__ == "__main__":
     main()
