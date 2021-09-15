@@ -10,7 +10,7 @@
 5. Invoke the endpoint to "test" it """
 
 # How to run this code -
-# python3 flogo_rest_api.py <base_url> <access_token> <sourceAppId> <subscriptionLocator> <targetSubscriptionLocator> <newAppName>
+# python3 flogo_rest_api.py <base_url> <access_token> <sourceAppId> <subscriptionLocator> <targetSubscriptionLocator> <newAppName> <App_Artifacts_Github_Path> <Override_App_Prop_Json>
 
 import json
 import requests
