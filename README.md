@@ -1,4 +1,4 @@
-# CI/CD workflow for deploying/copying/testing applications to TIBCO Cloud Integration using python script hosted on github
+# CI/CD workflow for deploying/copying/testing applications to TIBCO Cloud Integration using python script hosted on github..
 
 
 ## Description
