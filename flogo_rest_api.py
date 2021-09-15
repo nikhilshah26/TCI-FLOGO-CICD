@@ -31,6 +31,7 @@ parser.add_argument('subscriptionLocator')
 parser.add_argument('targetSubscriptionLocator')
 parser.add_argument('newAppName')
 parser.add_argument('App_Artifacts_Github_Path')
+parser.add_argument('Override_App_Prop_Json')
 args = parser.parse_args()
 
 print ('base_url :',args.base_url)
@@ -40,6 +41,7 @@ print ('subscriptionLocator :',args.subscriptionLocator)
 print ('targetSubscriptionLocator :',args.targetSubscriptionLocator)
 print ('newAppName :',args.newAppName)
 print ( 'App_Artifacts_Github_Path :',args.App_Artifacts_Github_Path)
+print ('Override_App_Prop_Json:', args.Override_App_Prop_Json)
 
 base_url=args.base_url
 access_token=args.access_token
@@ -48,6 +50,7 @@ subscriptionLocator=args.subscriptionLocator
 targetSubscriptionLocator=args.targetSubscriptionLocator
 newAppName=args.newAppName
 App_Artifacts_Github_Path=args.App_Artifacts_Github_Path
+Override_App_Prop_Json=args.Override_App_Prop_Json
 
 
 Auth_Header={'Authorization' : 'Bearer '+access_token+'','Accept': 'application/json','User-Agent':'PostmanRuntime/7.28.3'}
@@ -159,14 +162,35 @@ def get_Endpoints(targetSubscriptionLocator,app_id):
     time.sleep(20)
     print('\n ***Test Endpoint Response ***',requests.get(req_url+'/postgresql').json())
 
+def override_App_Props(subscriptionLocator,app_id,variableType,Override_App_Prop_Json):
+    print ("***** Overriding App Prop******** ", Override_App_Prop_Json)
+    response = requests.put(base_url+'/tci/v1/subscriptions/'+subscriptionLocator+'/apps/'+ app_id+'/env/variables?variableType='+variableType, headers=Auth_Header,data=Override_App_Prop_Json)
+    print (response.status_code)
+    print (response.text)
+
+def delete_app(subscriptionLocator,app_id):
+    print ("***** Deleting app with appid: ", app_id)
+    response = requests.delete(base_url+'/tci/v1/subscriptions/'+subscriptionLocator+'/apps/'+ app_id, headers=Auth_Header)
+    print (response.status_code)
+    print (response.text)
+
+
 def main():
     get_UserInfo()
     #app_id=copy_App(sourceAppId,newAppName,subscriptionLocator,targetSubscriptionLocator)
     download_app_artifacts_from_Githib(App_Artifacts_Github_Path+'/flogo.json',App_Artifacts_Github_Path+'/manifest.json')
     app_id=pushapp_using_app_artifacts(subscriptionLocator,newAppName,"true","1","true")
     get_App_Details(app_id,subscriptionLocator)
-    #start_App(subscriptionLocator,app_id)
-    get_Endpoints(subscriptionLocator,app_id)
+    time.sleep(30)
+    app_id_new=copy_App(app_id,newAppName,subscriptionLocator,targetSubscriptionLocator)
+    start_App(targetSubscriptionLocator,app_id_new)
+    time.sleep(30)
+    get_Endpoints(targetSubscriptionLocator,app_id_new)
+    override_App_Props(targetSubscriptionLocator,app_id_new,'app',Override_App_Prop_Json)
+    time.sleep(30)
+    get_Endpoints(targetSubscriptionLocator,app_id_new)
+    delete_app(subscriptionLocator,app_id)
+    delete_app(targetSubscriptionLocator,app_id_new)
 
 if __name__ == "__main__":
     main()
