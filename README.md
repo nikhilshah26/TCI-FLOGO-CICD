@@ -1,21 +1,24 @@
-# CI/CD workflow for deploying/copying/testing applications to TIBCO Cloud Integration using python script hosted on github..
+# CI/CD workflow for deploying/copying/testing FLOGO applications to TIBCO Cloud Integration using python script hosted on github.
 
 
 ## Description
 
-This sample demonstrates a simple worflow about how to deploy applications to TCI, copy them from one org to another, run the app, and test the endpoints.
+This sample demonstrates a simple workflow mentioned below about how to deploy FLOGO apps to TCI, copy them from one org to another, run the app, and test the endpoints.
 
-""" We have 2 orgs we use for CI/CD in the Cooper Airlines org: Dev/QA, Staging & Pre-Production
-1. The app on Dev/QA already exists and the purpose of the Jenkins pipeline is:
-2. To copy a specific app from Dev/QA org to Staging  org
-3. Deploy the new copied app in Staging org
-4. Retrieve the endpoints of the deployed app in Staging org
-5. Invoke the endpoint to "test" it """
+1. Checkout Flogo app json (with Connection) and manifest json from GitHub
+2. Deploy the app to Dev/QA Org using TCI Platform API
+3. Test the app endpoint
+4. Copy the app to Staging Org
+5. Override the App Prop in Staging Org
+6. Test the Endpoint
+7. Delete the app from Dev/QA Org
 
 ## Prerequisites
 
 * Generate OAuth2 access token for Integration Domain from TIBCO Cloud Settings page - https://account.cloud.tibco.com/manage/settings/oAuthTokens
 * Install jenkins - https://www.jenkins.io/doc/book/installing/
+* Install python3 on the host system where jenkins is running
+* Install python requests module using - pip install requests
 
 
 ## Run the CI/CD pipeline
