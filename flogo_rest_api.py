@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Author : Nikhil Shah
 # Date : 06/08/21
-# This python script executes below CI/CD workflow which is called by jenkins.
+# This python script executes below CI/CD workflow which is called by jenkins..
 """ We have 2 orgs we use for CI/CD in the Cooper Airlines org: Dev/QA, Staging & Pre-Production
 1. The app is deployed on Dev/QA org using the flogo.json and manifest.json artifacts on github
 2. Start the app and Test the endpoints
