@@ -1,5 +1,5 @@
 {
-    "name": "Flogo_App_With_Connections",
+    "name": "FlogoDemoApp",
     "description": "",
     "version": "1.0.0",
     "type": "flogo",
@@ -21,22 +21,22 @@
             "protocol": "http",
             "port": "9999",
             "spec": {
-                "name": "Flogo_App_With_Connections",
+                "name": "FlogoDemoApp",
                 "version": "1.0.0"
             },
             "title": "ReceiveHTTPMessage",
             "swagger": {
                 "swagger": "2.0",
                 "info": {
-                    "title": "Flogo_App_With_Connections",
+                    "title": "FlogoDemoApp",
                     "version": "1.0.0",
                     "description": "Simple REST Trigger"
                 },
                 "paths": {
-                    "/postgresql": {
+                    "/rest": {
                         "get": {
-                            "summary": "Query DB",
-                            "operationId": "get_postgresql",
+                            "summary": "REST Flow",
+                            "operationId": "get_rest",
                             "parameters": [],
                             "responses": {
                                 "200": {
@@ -45,7 +45,8 @@
                                         "$ref": "#/definitions/schema1"
                                     }
                                 }
-                            }
+                            },
+                            "description": "A Simple REST App"
                         }
                     }
                 },
@@ -53,7 +54,7 @@
                     "schema1": {
                         "type": "object",
                         "properties": {
-                            "output": {
+                            "message": {
                                 "type": "string"
                             }
                         }
@@ -65,59 +66,9 @@
     "propertyPrefix": "TCI_FLOGO_USER_",
     "properties": [
         {
-            "name": "PostgreSQL.PostgreSQLConn.Host",
+            "name": "Message",
             "datatype": "string",
-            "default": "54.153.30.86"
-        },
-        {
-            "name": "PostgreSQL.PostgreSQLConn.Port",
-            "datatype": "number",
-            "default": "5433"
-        },
-        {
-            "name": "PostgreSQL.PostgreSQLConn.Database_Name",
-            "datatype": "string",
-            "default": "university"
-        },
-        {
-            "name": "PostgreSQL.PostgreSQLConn.User",
-            "datatype": "string",
-            "default": "admin"
-        },
-        {
-            "name": "PostgreSQL.PostgreSQLConn.Password",
-            "datatype": "password",
-            "default": ""
-        },
-        {
-            "name": "PostgreSQL.PostgreSQLConn.Maximum_Open_Connections",
-            "datatype": "number",
-            "default": "0"
-        },
-        {
-            "name": "PostgreSQL.PostgreSQLConn.Maximum_Idle_Connections",
-            "datatype": "number",
-            "default": "2"
-        },
-        {
-            "name": "PostgreSQL.PostgreSQLConn.Maximum_Connection_Lifetime",
-            "datatype": "string",
-            "default": "0"
-        },
-        {
-            "name": "PostgreSQL.PostgreSQLConn.Maximum_Connection_Retry_Attempts",
-            "datatype": "number",
-            "default": "3"
-        },
-        {
-            "name": "PostgreSQL.PostgreSQLConn.Connection_Retry_Delay",
-            "datatype": "number",
-            "default": "5"
-        },
-        {
-            "name": "PostgreSQL.PostgreSQLConn.Connection_Timeout",
-            "datatype": "number",
-            "default": "20"
+            "default": "****** Success from FLOGO **********"
         }
     ]
 }
