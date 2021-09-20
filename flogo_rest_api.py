@@ -122,7 +122,7 @@ def pushapp_using_app_artifacts(subsLocator,appName,forceOverwrite,instanceCount
             ('manifest.json', ('manifest.json', open('manifest.json', 'rb'), 'application/json'))
         ]
 
-    print("**** Deploying app with the artifacts provided ****")
+    
     response = requests.post(api_url+'/subscriptions/'+subsLocator+'/apps?appName='+appName+'&forceOverwrite='+forceOverwrite+'&instanceCount='+instanceCount+'&retainAppProps='+retainAppProps+'', headers=Auth_Header,files=files)
     time.sleep(25)
     if (response.status_code != 202):
@@ -131,10 +131,11 @@ def pushapp_using_app_artifacts(subsLocator,appName,forceOverwrite,instanceCount
         exit()
     else:
         #print ("*****Status Code****"+str(response.status_code))
-        print(response.json())
+        #print(response.json())
+        
         resp_dict=json.loads(json.dumps(response.json()))
         appId=resp_dict['appId']
-        print('\n***** App ID of deployed app ****' , appId)
+        print("\n**** Deployed app successfully with the artifacts provided. App ID - ",appId)
         return appId
 
 
@@ -142,7 +143,7 @@ def pushapp_using_app_artifacts(subsLocator,appName,forceOverwrite,instanceCount
 
 #Copy App from Dev/QA Org to Staging Org. Pass 0 as subscriptionLocator, targetSubscriptionLocator if you want to copy to same org from where Oauth Token is generated.
 def copy_app(sourceAppId,NewAppName,subscriptionLocator,targetSubscriptionLocator):
-    print ("\n*****Copying App from Dev/QA org to Staging Org******")
+    
     if targetSubscriptionLocator != '':
         response = requests.post(api_url+'/subscriptions/'+subscriptionLocator+'/apps/'+sourceAppId+'/copy?appName='+NewAppName+'&targetSubscriptionLocator='+targetSubscriptionLocator, headers=Auth_Header)
     else:
@@ -158,7 +159,7 @@ def copy_app(sourceAppId,NewAppName,subscriptionLocator,targetSubscriptionLocato
     print(response.json())
     resp_dict=json.loads(json.dumps(response.json()))
     appId=resp_dict['appId']
-    print('\n***** App ID of copied app ****' , appId)
+    print ("\n*****Copied App successfully from Dev/QA org to Staging Org - ",appId)
     return appId
 
 #Get App Details
@@ -180,7 +181,7 @@ def start_app(targetSubscriptionLocator,app_id):
     else:
         response = requests.post(api_url+'/subscriptions/0/apps/'+ app_id+'/start', headers=Auth_Header) 
       
-    print('\n**** App Started *****' , response.json())  
+    print('\n**** App Started successfully. App ID -', app_id)  
 
 # Test the app endpoints. Endpoints is applicable for app which has ReceiveHTTPMessage/REST Trigger
 # If the app has multiple endpoints, then this function needs to be called multiple times and also you will need to specify the method if it is get,put,post,delete and also body in case of post/put methods.
@@ -253,7 +254,7 @@ def main():
     #Push the app to TCI
     app_id=pushapp_using_app_artifacts(subscriptionLocator,newAppName,"true","1","true")
     #Get app details
-    get_app_details(app_id,subscriptionLocator)
+    #get_app_details(app_id,subscriptionLocator)
     #Adding sleep to make sure app goes into running state
     time.sleep(35)
     #Test the app endpoints
