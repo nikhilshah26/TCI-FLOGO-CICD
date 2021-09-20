@@ -67,51 +67,70 @@ Auth_Header={'Authorization' : 'Bearer '+access_token+'','Accept': 'application/
 def get_userInfo():
     try:
         response = requests.get(api_url+'/userinfo', headers=Auth_Header)
-        print('\n**** User Info*****' , response.json())  
-        print ("*******",response.status_code)
+        #print('\n**** User Info*****' , response.json())  
+        #print ("*******",response.status_code)
     except:
-        print ("Please enter valid API URL. For eg. https://api.cloud.tibco.com/tci/v1 for TCI US region.")
+        print ("ERROR: Please enter valid API URL. For eg. https://api.cloud.tibco.com/tci/v1 for TCI US region.")
         exit()
 
+# Download flogo app json and manifest json from github url, required to be passed as body for deploying app
+# Note  that this function assumes that the github url provided as app_artifacts_github_path argument is a public github url.
+#If it is a provate url, then you will need to modify the function to login to your private github url first
+# flogo_json_url, manifest_json_url is the graw ithub url till the path where your app json and manifest json are stored
+#For eg: https://github.com/nikhilshah26/TCI-FLOGO-CICD/tree/main/Flogo_App
 def download_app_artifacts_from_githib(flogo_json_url,manifest_json_url):
-    #flogo_json_url = "https://raw.githubusercontent.com/nikhilshah26/TCI-FLOGO-CICD/main/Flogo_App/flogo.json"
-    #manifest_json_url= "https://raw.githubusercontent.com/nikhilshah26/TCI-FLOGO-CICD/main/Flogo_App/manifest.json"
-
     directory = os.getcwd()
     flogojsonfilename = directory + "/" + 'flogo.json'
-    print ("flogojsonfilename="+flogojsonfilename)
+    #print ("flogojsonfilename="+flogojsonfilename)
     flogo_json = requests.get(flogo_json_url)
 
-    f = open(flogojsonfilename,'w')
-    f.write(flogo_json.text)
-    f.close()
-
-    #print ("****FLOGO json****",flogo_json.text)
+    if (flogo_json.status_code==200):
+        f = open(flogojsonfilename,'w')
+        f.write(flogo_json.text)
+        f.close()
+        print("**** Downloaded flogo.json ****")
+        #print ("****FLOGO json****",flogo_json.text)
+    else:
+        print ("ERROR: Not able to download flogo.json from ",flogo_json_url)
+        exit()
 
     manifestjsonfilename = directory + "/" + 'manifest.json'
     manifest_json = requests.get(manifest_json_url)
 
-    f1 = open(manifestjsonfilename,'w')
-    f1.write(manifest_json.text)
-    f1.close()
+    if (manifest_json.status_code==200):
+        f1 = open(manifestjsonfilename,'w')
+        f1.write(manifest_json.text)
+        f1.close()
+        print("**** Downloaded manifest.json ****")
+        #print ("****Manifest json****",manifest_json.text)
+    else:
+        print ("ERROR: Not able to download manifest.json from ",manifest_json_url)
+        exit()
 
-    #print ("****Manifest json****",manifest_json.text)
 
+    
+
+#Deploy/push app using the flogo json and manifest json artifacts downloaded using the download_app_artifacts_from_githib function
+#subsLocator - Source Org Locatior. Pass the value as 0 if you want to push app in current org from where OAuth2 token is downloaded
+#appName - app name - should be unique within org.
+#forceOverwrite - true/false
+#instanceCount - 0/1/2/etc
+#retainAppProps - true/false
 def pushapp_using_app_artifacts(subsLocator,appName,forceOverwrite,instanceCount,retainAppProps):
     files = [
             ('artifact', ('flogo.json', open('flogo.json', 'rb'), 'application/json')),
             ('manifest.json', ('manifest.json', open('manifest.json', 'rb'), 'application/json'))
         ]
 
-    print("**** Deploying app with the artifacts provided******")
+    print("**** Deploying app with the artifacts provided ****")
     response = requests.post(api_url+'/subscriptions/'+subsLocator+'/apps?appName='+appName+'&forceOverwrite='+forceOverwrite+'&instanceCount='+instanceCount+'&retainAppProps='+retainAppProps+'', headers=Auth_Header,files=files)
     time.sleep(25)
     if (response.status_code != 202):
-        print ("*****Status Code****"+str(response.status_code))
+        print ("ERROR: *****Status Code****"+str(response.status_code))
         print (response.text)
         exit()
     else:
-        print ("*****Status Code****"+str(response.status_code))
+        #print ("*****Status Code****"+str(response.status_code))
         print(response.json())
         resp_dict=json.loads(json.dumps(response.json()))
         appId=resp_dict['appId']
@@ -121,7 +140,7 @@ def pushapp_using_app_artifacts(subsLocator,appName,forceOverwrite,instanceCount
 
     
 
-#Copy App
+#Copy App from Dev/QA Org to Staging Org. Pass 0 as subscriptionLocator, targetSubscriptionLocator if you want to copy to same org from where Oauth Token is generated.
 def copy_app(sourceAppId,NewAppName,subscriptionLocator,targetSubscriptionLocator):
     print ("\n*****Copying App from Dev/QA org to Staging Org******")
     if targetSubscriptionLocator != '':
@@ -130,7 +149,7 @@ def copy_app(sourceAppId,NewAppName,subscriptionLocator,targetSubscriptionLocato
         response = requests.post(api_url+'/subscriptions/0/apps/'+sourceAppId+'/copy?appName='+NewAppName, headers=Auth_Header)    
     print (response.status_code)
     if (response.status_code == 401):
-        print ("Invalid Secret access token. Please input valid Secret access token generated from https://account.cloud.tibco.com/manage/settings/oAuthTokens for TCI US region")
+        print ("ERROR: Invalid Secret access token. Please input valid Secret access token generated from https://account.cloud.tibco.com/manage/settings/oAuthTokens for TCI US region")
         exit()
     elif (response.status_code == 404 or response.status_code == 400):
         print (response.text)
@@ -152,7 +171,7 @@ def get_app_details(appId,targetSubscriptionLocator):
       
     print('\n**** App Details *****' , response.json())  
 
-
+# Start the app
 def start_app(targetSubscriptionLocator,app_id):
     req_url=api_url+'/subscriptions/'+targetSubscriptionLocator+'/apps/'+ app_id+'/start'
     #print ('req_url=',req_url)
@@ -163,7 +182,8 @@ def start_app(targetSubscriptionLocator,app_id):
       
     print('\n**** App Started *****' , response.json())  
 
-
+# Test the app endpoints. Endpoints is applicable for app which has ReceiveHTTPMessage/REST Trigger
+# If the app has multiple endpoints, then this function needs to be called multiple times and also you will need to specify the method if it is get,put,post,delete and also body in case of post/put methods.
 def test_endpoints(targetSubscriptionLocator,app_id,path,method,body):
 
     response = requests.get(api_url+'/subscriptions/'+targetSubscriptionLocator+'/apps/'+ app_id+'/endpoints', headers=Auth_Header) 
@@ -186,39 +206,77 @@ def test_endpoints(targetSubscriptionLocator,app_id,path,method,body):
         resp = requests.put(req_url+path,data=body)
         print ("*****Endpoint Response Code***",resp.status_code)
         print ("*****Endpoint Response ***",resp.json()) 
+    elif method == 'delete':
+        print ("**** delete req url", req_url+path)
+        resp = requests.delete(req_url+path)
+        print ("*****Endpoint Response Code***",resp.status_code)
+        print ("*****Endpoint Response ***",resp.json())
     else:
-        print (" **** Invalid method ****")
+        print ("ERROR: **** Invalid method ****")
 
+#This function overrides app props based on the json passed to the function.
+#Note that you can pass multiple app props as array to the json.
+#If the app prop value contains special characters like space, you will need to encode it unicode format. For eg: For space, you need to specify \u0020 
+# Variable type can be app, engine, user
+# override_app_prop_json - Need to pass in the below format -
+#[{"description": "string","name": "string","type": "string","value": "string"}]
+#Variables to be updated. Description and data type are ignored for engine and app variables.
 def override_app_props(subscriptionLocator,app_id,variableType,override_app_prop_json):
-    print ("***** Overriding App Prop******** ", override_app_prop_json)
-    response = requests.put(api_url+'/subscriptions/'+subscriptionLocator+'/apps/'+ app_id+'/env/variables?variableType='+variableType, headers=Auth_Header,data=override_app_prop_json)
-    print (response.status_code)
-    print (response.text)
+    if (override_app_prop_json!="" or override_app_prop_json!={}):
+        print ("***** Overriding App Prop******** ", override_app_prop_json)
+        response = requests.put(api_url+'/subscriptions/'+subscriptionLocator+'/apps/'+ app_id+'/env/variables?variableType='+variableType, headers=Auth_Header,data=override_app_prop_json)
+        #print (response.status_code)
+        print (response.text)
 
+    
+
+#Delete app
 def delete_app(subscriptionLocator,app_id):
     print ("***** Deleting app with appid: ", app_id)
     response = requests.delete(api_url+'/subscriptions/'+subscriptionLocator+'/apps/'+ app_id, headers=Auth_Header)
-    print (response.status_code)
+    #print (response.status_code)
     print (response.text)
 
-
+#Main function
+#In this main function, you can call functions based on your workflow.
+#For eg: If you already have an app in the org, and you just need to copy it to another org, you can comment out download_app_artifacts_from_githib function and just call 
+#copy_app function 
+# If your app has multiple endpoints, then you might need to call test_endpoints multiple times with diff params to test all the endpoints.
+# If you have to copy app from Dev/QA Org to Staging Org to Prod Org, then you will need to call copy_app, start_app, test_endpoints methods accordingly.
 def main():
+    #Get User Info
     get_userInfo()
+    #If the app is already present in org, then you can use this function
     #app_id=copy_app(sourceAppId,newAppName,subscriptionLocator,targetSubscriptionLocator)
+    #Download the flogo app json and manifest json artifcats from public github repo. It will be downloaded in current directory from where this python script is run.
     download_app_artifacts_from_githib(app_artifacts_github_path+'/flogo.json',app_artifacts_github_path+'/manifest.json')
+    #Push the app to TCI
     app_id=pushapp_using_app_artifacts(subscriptionLocator,newAppName,"true","1","true")
+    #Get app details
     get_app_details(app_id,subscriptionLocator)
-    time.sleep(30)
+    #Adding sleep to make sure app goes into running state
+    time.sleep(35)
+    #Test the app endpoints
+    #If your app has multiple endpoints, then you can call this function multiple times with diff params
     test_endpoints(subscriptionLocator,app_id,endpoint_path,'get','')
     
+    #Copy app from Dev/QA Org to Staging Org
     app_id_new=copy_app(app_id,newAppName,subscriptionLocator,targetSubscriptionLocator)
+    #Start the app
     start_app(targetSubscriptionLocator,app_id_new)
-    time.sleep(30)
+    # Wait for app to start
+    time.sleep(35)
+    # Test the endpoints
     test_endpoints(targetSubscriptionLocator,app_id_new,endpoint_path,'get','')
+    # Override app props based on the json passed
     override_app_props(targetSubscriptionLocator,app_id_new,'app',override_app_prop_json)
-    time.sleep(30)
+    #Add sleep to make sure app is repushed and goes in running state
+    time.sleep(35)
+    # Test the app endpoints after overriding app props.
     test_endpoints(targetSubscriptionLocator,app_id_new,endpoint_path,'get','')
+    # Delete app from Dev/QA Org
     delete_app(subscriptionLocator,app_id)
+    # Delete app from Staging Org
     delete_app(targetSubscriptionLocator,app_id_new)
 
 if __name__ == "__main__":
