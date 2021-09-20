@@ -55,7 +55,7 @@ targetSubscriptionLocator=args.targetSubscriptionLocator
 newAppName=args.newAppName
 endpoint_path=args.endpoint_path
 app_artifacts_github_path=args.app_artifacts_github_path
-override_app_prop_json=args.override_app_prop_json
+override_app_prop_json=json.loads(args.override_app_prop_json)
 
 
 Auth_Header={'Authorization' : 'Bearer '+access_token+'','Accept': 'application/json','User-Agent':'PostmanRuntime/7.28.3'}
