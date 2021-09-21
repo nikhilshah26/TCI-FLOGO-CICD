@@ -43,10 +43,7 @@ Note that you can pass multiple app props as array to the json.
 If the app prop value contains special characters like space, you will need to encode it unicode format. For eg: For space, you need to specify \u0020 .
 If you do not want to override any app prop, then pass {}.
 
-Note: If you have anyother workflow, then you will need to tweak the main function in the python script according to your workflow.
-For eg: If you already have an app in the org, and you just need to copy it to another org, you can comment out download_app_artifacts_from_githib function and just call copy_app function.
-If your app has multiple endpoints, then you might need to call test_endpoints multiple times with diff params to test all the endpoints.
-If you have to copy app from Dev/QA Org to Staging Org to Prod Org, then you will need to call copy_app, start_app, test_endpoints methods accordingly.
+```Note: If you have any other workflow, then you will need to tweak the main function in the python script according to your workflow. For eg: If you already have an app in the org, and you just need to copy it to another org, you can comment out download_app_artifacts_from_githib function and just call copy_app function. If your app has multiple endpoints, then you might need to call test_endpoints multiple times with diff params to test all the endpoints. If you have to copy app from Dev/QA Org to Staging Org to Prod Org, then you will need to call copy_app, start_app, test_endpoints methods accordingly.```
 
 
 ## Running as CI/CD pipeline using jenkins
