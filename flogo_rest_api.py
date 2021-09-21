@@ -269,7 +269,7 @@ def main():
     #Start the app
     start_app(targetSubscriptionLocator,app_id_new)
     # Wait for app to start
-    time.sleep(35)
+    time.sleep(40)
     # Test the endpoints
     test_endpoints(targetSubscriptionLocator,app_id_new,endpoint_path,'get','')
     # Override app props based on the json passed
@@ -281,7 +281,7 @@ def main():
     # Delete app from Dev/QA Org
     delete_app(subscriptionLocator,app_id)
     # Delete app from Staging Org
-    #delete_app(targetSubscriptionLocator,app_id_new)
+    delete_app(targetSubscriptionLocator,app_id_new)
 
 if __name__ == "__main__":
     main()
