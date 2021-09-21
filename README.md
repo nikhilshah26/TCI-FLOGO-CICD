@@ -43,6 +43,11 @@ Note that you can pass multiple app props as array to the json.
 If the app prop value contains special characters like space, you will need to encode it unicode format. For eg: For space, you need to specify \u0020 .
 If you do not want to override any app prop, then pass {}.
 
+Note: If you have anyother workflow, then you will need to tweak the main function in the python script according to your workflow.
+For eg: If you already have an app in the org, and you just need to copy it to another org, you can comment out download_app_artifacts_from_githib function and just call copy_app function.
+If your app has multiple endpoints, then you might need to call test_endpoints multiple times with diff params to test all the endpoints.
+If you have to copy app from Dev/QA Org to Staging Org to Prod Org, then you will need to call copy_app, start_app, test_endpoints methods accordingly.
+
 
 ## Running as CI/CD pipeline using jenkins
 
@@ -60,9 +65,13 @@ If you do not want to override any app prop, then pass {}.
 
 ![Select import](import-screenshots/2.Build_params.png)
 
+Note that this code currently works for public github url. For private github url's, need to add authentication/authorization in the code.
+
 5. In ```Source Code Management``` section, select ```Git``` and add github url in ```Repository URL``` -
 
 ![Select import](import-screenshots/3.SCM.png)
+
+Note: You can fork this repo and give your own forked repo url in this field.
 
 6. In ```Build Triggers``` section, select ```GitHub hook trigger for GITScm polling```. 
 In ```Build``` section, select ```Execute shell``` and provide below command ```python3 flogo_rest_api.py $api_url $access_token $sourceAppId $subscriptionLocator $targetSubscriptionLocator $newAppName $endpoint_path $app_artifacts_github_path $override_app_prop_json``` -
@@ -75,15 +84,17 @@ In ```Build``` section, select ```Execute shell``` and provide below command ```
 
 8. Check the console output as below and see that the app is copied from Dev/QA org to Staging Org and also the app is running and the endpoints are being tested.
 
-![Select import](import-screenshots/5.Console_output.png)
+![Select import](import-screenshots/9.ConsoleLog.png)
 
 9. Check the app is copied to and running in TCI in Pre-Production/Staging Org -
 
-![Select import](import-screenshots/6.CopiedApp.png)
+![Select import](import-screenshots/8.CopiedApp.png)
 
 10. You can also configure GitHub Webhooks Trigger, to trigger your jenkins job. Please see screenshot below on how to configure webhooks on Github -
 
 ![Select import](import-screenshots/6.Webhooks.png)
+
+Note: You can fork this repo and then add Webhooks for your github repo.
 
 ## Help
 
