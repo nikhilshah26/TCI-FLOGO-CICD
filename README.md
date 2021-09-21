@@ -95,7 +95,7 @@ Note: You can fork this repo and then add Webhooks for your github repo.
 
 ## Help
 
-Please refer [TIBCO Cloud<sup>&trade;</sup> Integration API documentation](https://integration.cloud.tibco.com/docs/#Subsystems/tci-api/home.html?TocPath=TIBCO%2520Cloud%25E2%2584%25A2%2520Integration%2520API%257C_____0) and Swagger Page URL [docs.tibco.com](https://api.cloud.tibco.com/tci/docs/) for additional information.
+Please refer [TIBCO Cloud<sup>&trade;</sup> Integration API documentation](https://integration.cloud.tibco.com/docs/#Subsystems/tci-api/home.html?TocPath=TIBCO%2520Cloud%25E2%2584%25A2%2520Integration%2520API%257C_____0) and [Swagger Page URL](https://api.cloud.tibco.com/tci/docs/) for additional information.
 
 ## Feedback
 If you have feedback, don't hesitate to talk to us!
