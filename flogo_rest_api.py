@@ -281,7 +281,7 @@ def main():
     # Delete app from Dev/QA Org
     delete_app(subscriptionLocator,app_id)
     # Delete app from Staging Org
-    delete_app(targetSubscriptionLocator,app_id_new)
+    #delete_app(targetSubscriptionLocator,app_id_new)
 
 if __name__ == "__main__":
     main()
