@@ -43,10 +43,7 @@ Note that you can pass multiple app props as array to the json.
 If the app prop value contains special characters like space, you will need to encode it unicode format. For eg: For space, you need to specify \u0020 .
 If you do not want to override any app prop, then pass {}.
 
-Note: If you have anyother workflow, then you will need to tweak the main function in the python script according to your workflow.
-For eg: If you already have an app in the org, and you just need to copy it to another org, you can comment out download_app_artifacts_from_githib function and just call copy_app function.
-If your app has multiple endpoints, then you might need to call test_endpoints multiple times with diff params to test all the endpoints.
-If you have to copy app from Dev/QA Org to Staging Org to Prod Org, then you will need to call copy_app, start_app, test_endpoints methods accordingly.
+```Note: If you have any other workflow, then you will need to tweak the main function in the python script according to your workflow. For eg: If you already have an app in the org, and you just need to copy it to another org, you can comment out download_app_artifacts_from_githib function and just call copy_app function. If your app has multiple endpoints, then you might need to call test_endpoints multiple times with diff params to test all the endpoints. If you have to copy app from Dev/QA Org to Staging Org to Prod Org, then you will need to call copy_app, start_app, test_endpoints methods accordingly.```
 
 
 ## Running as CI/CD pipeline using jenkins
@@ -98,7 +95,7 @@ Note: You can fork this repo and then add Webhooks for your github repo.
 
 ## Help
 
-Please refer [TIBCO Cloud<sup>&trade;</sup> Integration API documentation](https://integration.cloud.tibco.com/docs/#Subsystems/tci-api/home.html?TocPath=TIBCO%2520Cloud%25E2%2584%25A2%2520Integration%2520API%257C_____0) and Swagger Page URL [docs.tibco.com](https://api.cloud.tibco.com/tci/docs/) for additional information.
+Please refer [TIBCO Cloud<sup>&trade;</sup> Integration API documentation](https://integration.cloud.tibco.com/docs/#Subsystems/tci-api/home.html?TocPath=TIBCO%2520Cloud%25E2%2584%25A2%2520Integration%2520API%257C_____0) and [Swagger Page URL](https://api.cloud.tibco.com/tci/docs/) for additional information.
 
 ## Feedback
 If you have feedback, don't hesitate to talk to us!
