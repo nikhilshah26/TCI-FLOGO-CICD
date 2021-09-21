@@ -45,28 +45,42 @@ For eg: ```[{"description":"string","name":"PostgreSQL.PostgreSQLConn.Host","typ
 1. Get the subscriptionLocator of the source org and target org from the userinfo platform API as shown below -
 ![Select import](import-screenshots/7.APICalls.png)
 
+2. Start the jenkins and login to jenkins url - http://localhost:8080/
 
-3. Start the jenkins and login to jenkins url - http://localhost:8080/
+3. Create a freestyle project
 
-4. Create a freestyle project
-
-5. Select the project and click on Configure. Check This project is parameterized
+4. Select the project and click on Configure. Check This project is parameterized
 Add the params as base_url, access_token, sourceAppId, subscriptionLocator, targetSubscriptionLocator, newAppName and their default values
-![Select import](import-screenshots/1.Build_params.png)
+![Select import](import-screenshots/1.General.png)
+![Select import](import-screenshots/2.Build_params.png)
 
-6. Select SCM as git and configure using the repo url as shown below -
-![Select import](import-screenshots/2.SCM.png)
+5. Select SCM as git and configure using the repo url as shown below -
+![Select import](import-screenshots/3.SCM.png)
 
-7. Add build step as shown below -
-![Select import](import-screenshots/3.Build.png)
+6. Add build step as shown below -
+![Select import](import-screenshots/4.BuildTrigger_and_BuildStep.png)
 
-8. Click on Save and click on Build with Parameters as below -
-![Select import](import-screenshots/4.Build_with_params.png)
+7. Click on Save and click on Build with Parameters as below -
+![Select import](import-screenshots/5.Build_with_params.png)
 
-9. Check the console output as below and see that the app is copied from Dev/QA org to Staging Org and also the app is running and the endpoints are being tested.
+8. Check the console output as below and see that the app is copied from Dev/QA org to Staging Org and also the app is running and the endpoints are being tested.
 ![Select import](import-screenshots/5.Console_output.png)
 
-10. Check the app is copied to and running in TCI in Pre-Production/Staging Org -
+9. Check the app is copied to and running in TCI in Pre-Production/Staging Org -
 ![Select import](import-screenshots/6.CopiedApp.png)
+
+10. You can also configure GitHub Webhooks Trigger, to trigger your jenkins job. Please see screenshot below on how to configure webhooks on Github -
+![Select import](import-screenshots/6.Webhooks.png)
+
+## Help
+
+Please refer [TIBCO Cloud<sup>&trade;</sup> Integration API documentation](https://integration.cloud.tibco.com/docs/#Subsystems/tci-api/home.html?TocPath=TIBCO%2520Cloud%25E2%2584%25A2%2520Integration%2520API%257C_____0) and Swagger Page URL [docs.tibco.com](https://api.cloud.tibco.com/tci/docs/) for additional information.
+
+## Feedback
+If you have feedback, don't hesitate to talk to us!
+
+* Submit feature requests on our [TCI Ideas](https://ideas.tibco.com/?project=TCI) or [FE Ideas](https://ideas.tibco.com/?project=FE) portal
+* Ask questions on the [TIBCO Community](https://community.tibco.com/answers/product/344006)
+* Send us a note at `tci@tibco.com`
 
 

@@ -7,12 +7,15 @@
 2. Start the app and Test the endpoints
 3. Copy this app from Dev/QA org to Staging  org
 4. Start the new copied app in Staging org
-5. Override the DB Host name app prop 
+5. Override the app prop 
 6. Retrieve the endpoints of the deployed app in Staging org
 7. Invoke the endpoint to "test" it """
 
+# For more info on the TIBCO Cloud™ Integration API, please refer docs - https://integration.cloud.tibco.com/docs/#Subsystems/tci-api/home.html?TocPath=TIBCO%2520Cloud%25E2%2584%25A2%2520Integration%2520API%257C_____0
+# For more info on the API definitions, refer Swagger Page URL - https://api.cloud.tibco.com/tci/docs/
 # How to run this code -
 # python3 flogo_rest_api.py <api_url> <access_token> <sourceAppId> <subscriptionLocator> <targetSubscriptionLocator> <newAppName> <endpoint_path> <app_artifacts_github_path> <override_app_prop_json>
+
 
 import json
 import requests
@@ -278,7 +281,7 @@ def main():
     # Delete app from Dev/QA Org
     delete_app(subscriptionLocator,app_id)
     # Delete app from Staging Org
-    delete_app(targetSubscriptionLocator,app_id_new)
+    #delete_app(targetSubscriptionLocator,app_id_new)
 
 if __name__ == "__main__":
     main()
