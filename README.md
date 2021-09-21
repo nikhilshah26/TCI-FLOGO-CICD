@@ -47,33 +47,42 @@ If you do not want to override any app prop, then pass {}.
 ## Running as CI/CD pipeline using jenkins
 
 1. Get the subscriptionLocator of the source org and target org from the ```userinfo``` TIBCO Cloud™ Integration API as shown below -
+
 ![Select import](import-screenshots/7.APICalls.png)
 
 2. Start the jenkins and login to jenkins url - http://localhost:8080/
 
 3. Create a freestyle project
 
-4. Select the project and click on Configure. Check This project is parameterized.
-Add the params as base_url, access_token, sourceAppId, subscriptionLocator, targetSubscriptionLocator, newAppName and their default values
+4. Select the project and click on Configure. In the ```General``` section, select ```GitHub project``` and provide your github repo url. Select ```This project is parameterized``` and add the params as base_url, access_token, sourceAppId, subscriptionLocator, targetSubscriptionLocator, newAppName, endpoint_path, app_artifacts_github_path, override_app_prop_json  and their default values.
+
 ![Select import](import-screenshots/1.General.png)
+
 ![Select import](import-screenshots/2.Build_params.png)
 
-5. Select SCM as git and configure using the repo url as shown below -
+5. In ```Source Code Management``` section, select ```Git``` and add github url in ```Repository URL``` -
+
 ![Select import](import-screenshots/3.SCM.png)
 
-6. Add build step as shown below -
+6. In ```Build Triggers``` section, select ```GitHub hook trigger for GITScm polling```. 
+In ```Build``` section, select ```Execute shell``` and provide below command ```python3 flogo_rest_api.py $api_url $access_token $sourceAppId $subscriptionLocator $targetSubscriptionLocator $newAppName $endpoint_path $app_artifacts_github_path $override_app_prop_json``` -
+
 ![Select import](import-screenshots/4.BuildTrigger_and_BuildStep.png)
 
 7. Click on Save and click on Build with Parameters as below -
+
 ![Select import](import-screenshots/5.Build_with_params.png)
 
 8. Check the console output as below and see that the app is copied from Dev/QA org to Staging Org and also the app is running and the endpoints are being tested.
+
 ![Select import](import-screenshots/5.Console_output.png)
 
 9. Check the app is copied to and running in TCI in Pre-Production/Staging Org -
+
 ![Select import](import-screenshots/6.CopiedApp.png)
 
 10. You can also configure GitHub Webhooks Trigger, to trigger your jenkins job. Please see screenshot below on how to configure webhooks on Github -
+
 ![Select import](import-screenshots/6.Webhooks.png)
 
 ## Help
